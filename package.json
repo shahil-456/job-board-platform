@@ -1,0 +1,26 @@
+{
+  "name": "express",
+  "version": "1.0.0",
+  "description": "express test",
+  "homepage": "https://github.com/shahil-456/capstone#readme",
+  "bugs": {
+    "url": "https://github.com/shahil-456/capstone/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shahil-456/capstone.git"
+  },
+  "license": "ISC",
+  "author": "shahil",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node --env-file=.env index.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "mongoose": "^8.9.5"
+  },
+  "keywords": []
+}
