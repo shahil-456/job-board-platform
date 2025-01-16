@@ -1,3 +1,0 @@
- "dev":"nodemon --env-file=.env index.js"
- https://www.notion.so/Students_datagfgf-17c9eb9753d180ed8b37f36c0db54cee?pvs=4
- https://www.notion.so/Students_data-17c9eb9753d180ed8b37f36c0db54cee
