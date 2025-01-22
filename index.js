@@ -1,28 +1,55 @@
-import express from 'express';
-import { connectDB } from './config/db.js';
+import express from "express";
+import cookieParser from "cookie-parser";
+import { connectDB } from "./config/db.js";
+import { apiRouter } from "./routes/index.js";
+import dotenv from "dotenv";
+import bodyParser from 'body-parser'; // Import body-parser
 
-
+dotenv.config();
 
 const app = express();
+
+
+// Use body-parser to parse JSON bodies
+app.use(express.json())
+app.use(cookieParser())
 const port = 3000;
 
-const myLogger = function (req, res, next) {
-    console.log('LOGGED');
-    next();
-  }
-  
-app.use(myLogger);
+app.use(express.json())
 
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 
 connectDB();
 
 console.log('URI:', process.env.uri);
+if (!process.env.uri) {
+    console.error('Environment variable "uri" is not defined');
+}
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-})
 
+app.get("/", (req, res) => {
+    res.send("Hello World!");
+});
+
+app.post('/test', (req, res) => {
+    console.log(req.body); // Log the POST data
+    res.json({
+        message: 'Received POST data',
+        data: req.body
+    });
+});
+
+
+app.use("/api", apiRouter);
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-})
+    console.log(`Example app listening on port ${port}`);
+});
+
+
+
+
+
+//http://localhost:3000/api/user/login
