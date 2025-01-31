@@ -5,23 +5,23 @@ export const mentorAuth = (req, res, next) => {
         const { token } = req.cookies;
 
         if (!token) {
-            return res.status(401).json({ message: "user not autherised", success: false });
+            return res.status(401).json({ message: "mentor not autherised", success: false });
         }
 
         const tokenVerified = jwt.verify(token, process.env.JWT_SECRET_KEY);
         
         if (!tokenVerified) {
-            return res.status(401).json({ message: "user not autherised", success: false });
+            return res.status(401).json({ message: "mentor not autherised", success: false });
         }
         
-        if(tokenVerified.role != 'mentor' && tokenVerified.role !='admin'){
-            return res.status(401).json({ message: "user not autherised", success: false });
-        }
+        // if(tokenVerified.role != 'mentor' || tokenVerified.role !='admin'){
+        //     return res.status(401).json({ message: "mentor not autherised3", success: false });
+        // }
 
-        req.user = tokenVerified;
+        req.mentor = tokenVerified;
 
         next();
     } catch (error) {
-        return res.status(401).json({ message: error.message || "user autherization failed", success: false });
+        return res.status(401).json({ message: error.message || "mentor autherization failed", success: false });
     }
 };

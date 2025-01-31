@@ -43,6 +43,8 @@ const mentorSchema = new Schema({
         type: Boolean,
         default: true,
     },
+    isVerified: { type: Boolean, default: false },
+
 });
 
 export const Mentor = mongoose.model("Mentor", mentorSchema);

@@ -1,11 +1,6 @@
 import { User } from "../models/userModel.js";
-
 import bcrypt from "bcrypt";
 import { generateToken } from "../utils/token.js";
-import cloudinary from '../config/cloudConfig.js';
-import { v2 as cloudinaryV2 } from 'cloudinary';
-import { Job,JobApply,CvData } from "../models/jobModel.js";
-
 
 export const userSignup = async (req, res, next) => {
     try {
@@ -44,17 +39,23 @@ export const userLogin = async (req, res, next) => {
         if (!email || !password) {
             return res.status(400).json({ message: "All fields are required" });
         }
+
         const userExist = await User.findOne({ email });
+
         if (!userExist) {
             return res.status(404).json({ message: "User does not exist" });
         }
+
         const passwordMatch = bcrypt.compareSync(password, userExist.password);
+
         if (!passwordMatch) {
             return res.status(401).json({ message: "User not authenticated" });
         }
+
         const token = generateToken(userExist._id); // Use userExist._id instead of userData._id
         res.cookie("token", token);
-        return res.json({ data: userExist, message: "Success",token:token}); // Use userExist instead of userData
+
+        return res.json({ data: userExist, message: "User login success" }); // Use userExist instead of userData
     } catch (error) {
         return res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
     }
@@ -71,21 +72,6 @@ export const userProfile = async (req, res, next) => {
         return res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
     }
 };
-
-
-export const authenticate = (req, res, next) => {
-    const token = req.headers.authorization?.split(' ')[1];
-    if (!token) return res.status(401).json({ message: 'Unauthorized' });
-
-    try {
-        const decoded = jwt.verify(token, 'd1s24fhjkd8723jh89dsjkfhweuir2jhewr832ur');
-        req.user = decoded;
-        next();
-    } catch (err) {
-        res.status(403).json({ message: 'Invalid token' });
-    }
-};
-
 
 
 // controllers/testController.js
@@ -155,10 +141,6 @@ export const profileUpdate = async (req, res, next) => {
 
 
 
-
-
-
-
 export const accountDeactivate = async (req, res, next) => {
     try {
         const userId = req.user.id;
@@ -216,12 +198,6 @@ export const changePassword = async (req, res, next) => {
 
 
 
-
-
-
-
-
-
 export const forgotPassword = async (req, res, next) => {
     try {
         const { email } = req.body;
@@ -249,33 +225,3 @@ export const forgotPassword = async (req, res, next) => {
         return res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
     }
 };
-
-
-
-
-export const uploadCV = async (req, res, next) => {
-    try {
-
-
-        let cv = req.file;//upload this file to cloudinary
-        if (req.file) {
-            const result = await cloudinary.uploader.upload(req.file.path, {
-                folder: 'uploads', 
-            });
-            cv = result.secure_url; 
-            return res.status(201).json({ data: result, message: 'CV Uploaded' });
-
-        }
-
-        const userID = req.user.id;
-
-        // Create a new job entry
-        const cvData = new CvData({ userID, cv });
-        // await jobData.save();
-
-        return res.status(201).json({ data: cvData, message: 'Job Created' });
-    } catch (error) {
-        return res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
-    }
-};
-

@@ -1,13 +1,19 @@
 import e from "express";
 import { userRouter } from "./userRoutes.js";
 import { mentorRouter } from "./mentorRoutes.js";
-import { testRouter } from "./testRoutes.js";
+import { jobRouter } from "./jobRoutes.js";
+import { adminRouter } from "./adminRoutes.js";
 
 const router = e.Router();
 
 router.use("/user", userRouter);
 router.use("/mentor", mentorRouter);
-router.use("/tester", testRouter);
+router.use("/job", jobRouter);
+router.use("/admin", adminRouter);
+
+
+
+// router.use("/tester", testRouter);
 
 
 // const express = require('express');

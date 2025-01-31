@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-const userSchema = new Schema({
+const adminSchema = new Schema({
     name: {
         type: String,
         required: true,
@@ -18,26 +18,15 @@ const userSchema = new Schema({
         required: true,
         minLength: 6,
     },
-    mobile: {
-        type: String,
-        required: true,
-    },
-
-    mobile: {
-        type: String,
-        required: true,
-    },
+    
     profiePic: {
         type: String,
-        default: "https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg",
+        default: "https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-admin-profile-icon.jpg",
     },
     isActive: {
         type: Boolean,
         default: true,
     },
-
-    isVerified: { type: Boolean, default: false }
-
 });
 
-export const User = mongoose.model("User", userSchema);
+export const Admin = mongoose.model("Admin", adminSchema);

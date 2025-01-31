@@ -1,7 +1,8 @@
 import e from "express";
-import { userLogin, userLogout, userProfile, userSignup,new_test,profileUpdate,accountDeactivate,changePassword,uploadCV } from "../controllers/userControllers.js";
+import { userLogin, userLogout, userProfile, userSignup,new_test,profileUpdate,accountDeactivate,changePassword } from "../controllers/userControllers.js";
 import { userAuth } from "../middlewares/userAuth.js";
 import { upload } from "../middlewares/multer.js";
+
 
 const router = e.Router();
 
@@ -23,9 +24,6 @@ router.post("/update_profile",userAuth, profileUpdate);
 router.post("/change_password",userAuth, changePassword);
 
 router.post("/forgot_password", changePassword);
-
-router.post("/upload_cv",userAuth,upload.single('cv') ,uploadCV);
-
 
 // router.get("/deactivate",userAuth, accountDeactivate);
 

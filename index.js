@@ -4,6 +4,7 @@ import { connectDB } from "./config/db.js";
 import { apiRouter } from "./routes/index.js";
 import dotenv from "dotenv";
 import bodyParser from 'body-parser'; // Import body-parser
+import cors  from 'cors';
 
 dotenv.config();
 
@@ -13,7 +14,14 @@ const app = express();
 // Use body-parser to parse JSON bodies
 app.use(express.json())
 app.use(cookieParser())
-const port = 3000;
+const port = 3001;
+app.use(cors({
+    origin: 'http://localhost:3000', 
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allow specific HTTP methods
+    credentials: true,  // Allow sending cookies
+  }));
+//   allowedHeaders: '*',  // Allow all headers
+ 
 
 app.use(express.json())
 
