@@ -28,7 +28,7 @@ export const userSignup = async (req, res, next) => {
         const userData = new User({ name, email, password: hashedPassword, mobile, profilePic });
         await userData.save();
 
-        const token = generateToken(userData._id);
+        const token = generateToken(userData._id,'user');
         res.cookie("token", token);
 
         return res.json({ data: userData, message: "user account created" });
@@ -52,7 +52,7 @@ export const userLogin = async (req, res, next) => {
         if (!passwordMatch) {
             return res.status(401).json({ message: "User not authenticated" });
         }
-        const token = generateToken(userExist._id); // Use userExist._id instead of userData._id
+        const token = generateToken(userExist._id,'user'); // Use userExist._id instead of userData._id
         res.cookie("token", token);
         return res.json({ data: userExist, message: "Success",token:token}); // Use userExist instead of userData
     } catch (error) {
@@ -71,6 +71,28 @@ export const userProfile = async (req, res, next) => {
         return res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
     }
 };
+
+
+export const myCV = async (req, res) => {
+    try {
+        const userID = req.user.id; // Get user ID from authenticated request
+
+        // Fetch CV data for the user
+        const userData = await CvData.findOne({ userID });
+
+        // If no CV found, return error message
+        if (!userData) {
+            return res.status(404).json({ message: "CV not found for this user." });
+        }
+
+        return res.json({ data: userData, message: "CV fetched successfully" });
+
+    } catch (error) {
+        console.error("Error fetching CV:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
+
 
 
 export const authenticate = (req, res, next) => {
@@ -117,6 +139,18 @@ export const userLogout = async (req, res, next) => {
 
 
 
+export const checkUser = async (req, res, next) => {
+    try {
+        return res.json({ message: "user autherized" });
+    } catch (error) {
+        return res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
+    }
+};
+
+
+
+
+
 
 
 
@@ -125,23 +159,36 @@ export const profileUpdate = async (req, res, next) => {
         console.log("Profile update endpoint hit");
 
         const userId = req.user.id; 
-        const { name, email, mobile, profilePic } = req.body;
+        const { name, email, mobile } = req.body;
 
-        if ( !mobile) {
-            return res.status(400).json({ message: "Name and email are required" });
+
+        let profPic = req.file;
+        if (req.file) {
+            const result = await cloudinary.uploader.upload(req.file.path, {
+                folder: 'uploads', 
+            });
+            profPic = result.secure_url; 
+            // return res.status(201).json({ data: result, message: 'Job Created' });
+
         }
+
+
+        // if ( !mobile) {
+        //     return res.status(400).json({ message: "Name and email are required" });
+        // }
 
         const user = await User.findById(userId);
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
 
+
         if (name) user.name = name;
         if (email) user.email = email;
         if (mobile) user.mobile = mobile;
-        if (profilePic) user.profilePic = profilePic;
-       
+        if (profPic) user.profilePic = profPic;
 
+       
         const updatedUser = await user.save();
 
         return res.json({
@@ -256,6 +303,7 @@ export const forgotPassword = async (req, res, next) => {
 export const uploadCV = async (req, res, next) => {
     try {
 
+        const { skill } = req.body;
 
         let cv = req.file;//upload this file to cloudinary
         if (req.file) {
@@ -263,17 +311,15 @@ export const uploadCV = async (req, res, next) => {
                 folder: 'uploads', 
             });
             cv = result.secure_url; 
-            return res.status(201).json({ data: result, message: 'CV Uploaded' });
+            // return res.status(201).json({ data: result, message: 'CV Uploaded' });
 
         }
 
         const userID = req.user.id;
-
         // Create a new job entry
-        const cvData = new CvData({ userID, cv });
-        // await jobData.save();
-
-        return res.status(201).json({ data: cvData, message: 'Job Created' });
+        const cvData = new CvData({ userID,skill,cv });
+        await cvData.save();
+        return res.status(201).json({ data: cvData, message: 'CV Added' });
     } catch (error) {
         return res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
     }

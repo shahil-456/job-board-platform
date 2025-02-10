@@ -54,7 +54,7 @@ export const adminLogin = async (req, res, next) => {
             return res.status(401).json({ message: "Admin not authenticated" });
         }
 
-        const token = generateToken(adminExist._id); // Use adminExist._id instead of adminData._id
+        const token = generateToken(adminExist._id,'admin'); // Use adminExist._id instead of adminData._id
         res.cookie("token", token);
 
         return res.json({ data: adminExist, message: "Admin login success" }); // Use adminExist instead of adminData
@@ -194,7 +194,13 @@ export const userDetails = async (req, res, next) => {
     }
 };
 
-
+export const checkAdmin = async (req, res, next) => {
+    try {
+        return res.json({ message: "Admin autherized" });
+    } catch (error) {
+        return res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
+    }
+};
 
 
 export const accountDeactivate = async (req, res, next) => {

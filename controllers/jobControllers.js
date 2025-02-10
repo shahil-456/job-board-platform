@@ -14,15 +14,14 @@ export const createJob = async (req, res, next) => {
         if (!title || !details || !company || !contact || !skills) {
             return res.status(400).json({ message: "All fields are required" });
         }
-w2
-        let image = req.file;//upload this file to cloudinary
+
+        let image = req.file;
         if (req.file) {
             const result = await cloudinary.uploader.upload(req.file.path, {
                 folder: 'uploads', 
             });
             image = result.secure_url; 
-
-            return res.status(201).json({ data: result, message: 'Job Created' });
+            // return res.status(201).json({ data: result, message: 'Job Created' });
 
         }
 
@@ -38,13 +37,50 @@ w2
     }
 };
 
+
+
+
+export const updateJob = async (req, res, next) => {
+    try {
+        const { title, details, company, skills, contact } = req.body;
+        const { jobId } = req.params;
+
+        if (!jobId) {
+            return res.status(400).json({ message: "Job ID is required" });
+        }
+
+        let image;
+        if (req.file) {
+            const result = await cloudinary.uploader.upload(req.file.path, {
+                folder: 'uploads',
+            });
+            image = result.secure_url;
+        }
+
+        const updatedJob = await Job.findByIdAndUpdate(
+            jobId,
+            { title, details, company, skills, contact, ...(image && { image }) },
+            { new: true } 
+        );
+
+        if (!updatedJob) {
+            return res.status(404).json({ message: "Job not found" });
+        }
+
+        return res.status(200).json({ data: updatedJob, message: "Job Updated Successfully" });
+    } catch (error) {
+        return res.status(error.statusCode || 500).json({ message: error.message || "Internal Server Error" });
+    }
+};
+
+
 export const getJobs = async (req, res, next) => {
     try {
         console.log("Fetching all jobs");
 
         // Fetch all jobs from the Job collection
-        const jobs = await Job.find();
-
+        const jobs = await Job.find({ isVerified: true });
+        
         return res.json({
             data: jobs,
             message: "Jobs fetched successfully",
@@ -362,6 +398,36 @@ export const verifyJob = async (req, res, next) => {
         const updatedJob = await jobData.save();
 
         return res.json({ data: updatedJob, message: "Job verified successfully" });
+    } catch (error) {
+        return res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
+    }
+};
+
+
+
+export const getApplications = async (req, res, next) => {
+    try {
+        console.log("Fetching all Apps");
+
+        // Fetch all jobs from the Job collection
+
+        
+        const apps = await JobApply.find();
+
+        for (let app of apps) {
+            const userData = await User.findById(app.userID);
+            const jobData = await Job.findById(app.jobID);
+        
+            app._doc.userData = userData; 
+            app._doc.jobData = jobData;   
+        }
+        
+    
+
+        return res.json({
+            data: apps,
+            message: "Applications fetched successfully",
+        });
     } catch (error) {
         return res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
     }

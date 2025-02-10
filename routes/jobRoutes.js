@@ -1,8 +1,12 @@
 import e from "express";
-import {  jobProfile,new_test,profileUpdate,accountDeactivate,changePassword,createJob,getJobs,jobDetails,applyForJob,searchJobs,verifyJob } from "../controllers/JobControllers.js";
+import {  jobProfile,new_test,profileUpdate,accountDeactivate,changePassword,createJob,getJobs,jobDetails,applyForJob,searchJobs,verifyJob ,updateJob,getApplications} from "../controllers/JobControllers.js";
 import { mentorAuth } from "../middlewares/mentorAuth.js";
 import { userAuth } from "../middlewares/userAuth.js";
 import { adminAuth } from "../middlewares/adminAuth.js";
+import { jobAuth } from "../middlewares/jobAuth.js";
+
+
+
 import { upload } from "../middlewares/multer.js";
 
 const router = e.Router()
@@ -17,7 +21,11 @@ router.post("/create",mentorAuth,upload.single('image') ,createJob);
 // router.get("/jobs",adminAuth ,getJobs);
 // router.get("/jobs",userAuth ,getJobs);
 
-router.get("/jobs",userAuth ,getJobs);
+
+router.get("/jobs",jobAuth ,getJobs);
+router.get("/get-Applications",jobAuth ,getApplications);
+
+
 
 
 router.get("/get_job_details/:id",mentorAuth ,jobDetails);
@@ -28,11 +36,7 @@ router.post("/search_jobs/",userAuth ,searchJobs);
 
 router.get("/verify_job/:id",adminAuth ,verifyJob);
 
-
-
-
-
-
+router.put("/update-job/:jobId",mentorAuth,upload.single('image'), updateJob);
 
 
 //login

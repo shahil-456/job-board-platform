@@ -3,6 +3,8 @@ import { User } from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import { generateToken } from "../utils/token.js";
 import mongoose from 'mongoose';
+import { Job,JobApply,CvData } from "../models/jobModel.js";
+
 
 
 export const mentorSignup = async (req, res, next) => {
@@ -259,22 +261,27 @@ export const userDetails = async (req, res, next) => {
             return res.status(400).json({ message: "Invalid Job ID" });
         }
 
-        try {
-            const jobData = await Job.findById(userID);
-            console.log("User Data:", jobData);
-        } catch (error) {
-            console.error("Error fetching user data:", error);
+
+        const userData = await User.findById(userID);
+        
+        const cvData = await CvData.findOne({ userID });
+
+        if (cvData) {
+            userData._doc.cv = cvData.cv;
+            userData._doc.skill = cvData.skill;
         }
+        
 
 
-        const jobData = await User.findById(userID);
+        console.log(userData);
 
-        if (!jobData) {
+
+        if (!userData) {
             return res.status(404).json({ message: "User not found" });
         }
 
         return res.json({
-            data: jobData,
+            data: userData,
             message: "User details fetched successfully",
         });
     } catch (error) {
@@ -285,5 +292,11 @@ export const userDetails = async (req, res, next) => {
 
 
 
-
+export const checkMentor = async (req, res, next) => {
+    try {
+        return res.json({ message: "Employer autherized" });
+    } catch (error) {
+        return res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
+    }
+};
 

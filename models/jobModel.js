@@ -28,6 +28,12 @@ const jobSchema = new Schema({
         type: String,
         // required:tr
     },
+
+    image: {
+        type: String,
+
+        // required:tr
+    },
   
     role: {
         type: String,
@@ -68,6 +74,10 @@ const cvData = new Schema({
         type: String,
     },
    
+    skill: {
+        type: String,
+    },
+
     cv: {
         type: String,
     },
@@ -75,7 +85,7 @@ const cvData = new Schema({
     role: {
         type: String,
         enum: ["user", "job"],
-        default: "job",
+        default: "user",
     },
 
    

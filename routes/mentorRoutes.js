@@ -1,5 +1,5 @@
 import e from "express";
-import { mentorLogin, mentorLogout, mentorProfile, mentorSignup,new_test,profileUpdate,accountDeactivate,changePassword,getAllUsers ,userDetails} from "../controllers/mentorControllers.js";
+import { mentorLogin, mentorLogout, mentorProfile, mentorSignup,new_test,profileUpdate,accountDeactivate,changePassword,getAllUsers ,userDetails,checkMentor} from "../controllers/mentorControllers.js";
 import { mentorAuth } from "../middlewares/mentorAuth.js";
 
 const router = e.Router()
@@ -32,6 +32,9 @@ router.post("/forgot_password", changePassword);
 
 //logout
 router.get("/logout", mentorLogout);
+
+
+router.get("/check-employer", mentorAuth, checkMentor);
 
 
 
