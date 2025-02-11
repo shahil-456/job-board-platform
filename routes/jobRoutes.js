@@ -1,5 +1,5 @@
 import e from "express";
-import {  jobProfile,new_test,profileUpdate,accountDeactivate,changePassword,createJob,getJobs,jobDetails,applyForJob,searchJobs,verifyJob ,updateJob,getApplications} from "../controllers/JobControllers.js";
+import {  jobProfile,new_test,profileUpdate,accountDeactivate,changePassword,createJob,getJobs,jobDetails,applyForJob,searchJobs,verifyJob ,updateJob,getApplications} from "../controllers/jobControllers.js";
 import { mentorAuth } from "../middlewares/mentorAuth.js";
 import { userAuth } from "../middlewares/userAuth.js";
 import { adminAuth } from "../middlewares/adminAuth.js";
