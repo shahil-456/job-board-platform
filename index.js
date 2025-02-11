@@ -16,11 +16,8 @@ app.use(express.json())
 app.use(cookieParser())
 const port = 3001;
 app.use(cors({
-app.use(cors({
-    origin: ['http://localhost:5173','https://job-board-platform-front-qqitgf11v-shahils-projects-80f10986.vercel.app'] ,
+    origin: ['http://localhost:5173','https://job-board-platform-front-qqitgf11v-shahils-projects-80f10986.vercel.app/user/login'] ,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allow specific HTTP methods
-    credentials: true,  // Allow sending cookies
-  }));    methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allow specific HTTP methods
     credentials: true,  // Allow sending cookies
   }));
 //   allowedHeaders: '*',  // Allow all headers
