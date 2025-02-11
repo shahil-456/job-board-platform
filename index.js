@@ -16,7 +16,7 @@ app.use(express.json())
 app.use(cookieParser())
 const port = 3001;
 app.use(cors({
-    origin: ['http://localhost:5173','https://job-board-platform-front-end-git-main-shahils-projects-80f10986.vercel.app'], 
+    origin: '*', 
     methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allow specific HTTP methods
     credentials: true,  // Allow sending cookies
   }));
