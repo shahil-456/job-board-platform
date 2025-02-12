@@ -16,18 +16,13 @@ app.use(express.json())
 app.use(cookieParser())
 const port = 3001;
 app.use(cors({
-  origin: (origin, callback) => {
-    // Allow specific trusted origins
-    if (!origin || ['http://localhost:5173', 'https://job-board-platform-front-end.vercel.app'].includes(origin)) {
-      callback(null, true);  // Allow the origin
-    } else {
-      callback(new Error('Not allowed by CORS'), false);  // Reject other origins
-    }
-  },
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allow specific HTTP methods
-  credentials: true,  // Allow sending cookies (credentials)
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],  // Allow specific headers
-}));
+    origin: ['http://localhost:5173','https://job-board-platform-front-end.vercel.app'] ,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Allow specific HTTP methods
+    credentials: true,  // Allow sending cookies
+    allowedHeaders: '*',  // Allow all headers
+
+  }));
+ 
 
 //   allowedHeaders: '*',  // Allow all headers
  
