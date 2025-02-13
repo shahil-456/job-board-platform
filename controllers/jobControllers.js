@@ -29,7 +29,7 @@ export const createJob = async (req, res, next) => {
 
         // Create a new job entry
         const jobData = new Job({ mentorID, title, details, company, contact, skills, image });
-        // await jobData.save();
+        await jobData.save();
 
         return res.status(201).json({ data: jobData, message: 'Job Created' });
     } catch (error) {
@@ -78,8 +78,27 @@ export const getJobs = async (req, res, next) => {
     try {
         console.log("Fetching all jobs");
 
-        // Fetch all jobs from the Job collection
+        // const admin = req.admin;
+
         const jobs = await Job.find({ isVerified: true });
+        
+        return res.json({
+            data: jobs,
+            message: "Jobs fetched successfully",
+        });
+    } catch (error) {
+        return res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
+    }
+};
+
+
+export const getJobsAdmin = async (req, res, next) => {
+    try {
+        console.log("Fetching all jobs");
+
+        // const admin = req.admin;
+
+        const jobs = await Job.find();
         
         return res.json({
             data: jobs,
@@ -365,7 +384,6 @@ export const applyForJob = async (req, res, next) => {
 
         const user = await User.findById(userID).select("name");
 
-
         const jobApplyData = new JobApply({ userID,jobID });
 
          await jobApplyData.save();
@@ -377,7 +395,46 @@ export const applyForJob = async (req, res, next) => {
     }
 };
 
+// saved format
 
+
+
+export const applyDetails = async (req, res, next) => {
+    try {
+        const jobID = req.params.id; 
+        const userID = req.user.id;     
+
+        const application = await JobApply.findOne({ userID, jobID });
+
+        if (!application) {
+            return res.status(404).json({ message: "Application not found for this user and job" });
+        }
+
+        return res.json({ data: application, message: "Application found" });
+
+    } catch (error) {
+        return res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
+    }
+};
+
+
+
+
+
+export const deleteAllJobApp = async (req, res, next) => {
+    try {
+        const result = await JobApply.deleteMany({}); 
+        
+        return res.json({
+            message: 'All job applications have been deleted successfully',
+            deletedCount: result.deletedCount 
+        });
+    } catch (error) {
+        return res.status(error.statusCode || 500).json({ 
+            message: error.message || "Internal server error" 
+        });
+    }
+};
 
 
 export const verifyJob = async (req, res, next) => {

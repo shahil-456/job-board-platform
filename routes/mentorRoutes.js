@@ -6,7 +6,7 @@ const router = e.Router()
 
 
 //signup
-router.post("/signup", mentorSignup);
+router.put("/signup", mentorSignup);
 
 //login
 router.put("/login", mentorLogin);
@@ -16,6 +16,8 @@ router.get("/profile", mentorAuth, mentorProfile);
 
 router.get("/get_users", mentorAuth, getAllUsers);
 router.get("/user_details/:id", mentorAuth, userDetails);
+
+
 
 
 // router.get("/new_test", new_test);

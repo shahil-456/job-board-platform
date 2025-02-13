@@ -14,7 +14,7 @@ export const mentorSignup = async (req, res, next) => {
         const { name, email, password, mobile, profilePic } = req.body;
 
         if (!name || !email || !password || !mobile) {
-            return res.status(400).json({ message: "all fields are required" });
+            return res.status(400).json({ message: "all fields are required"});
         }
 
         const isMentorExist = await Mentor.findOne({ email });

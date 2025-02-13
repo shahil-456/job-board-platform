@@ -1,5 +1,5 @@
 import e from "express";
-import {  jobProfile,new_test,profileUpdate,accountDeactivate,changePassword,createJob,getJobs,jobDetails,applyForJob,searchJobs,verifyJob ,updateJob,getApplications} from "../controllers/jobControllers.js";
+import {  jobProfile,new_test,profileUpdate,accountDeactivate,changePassword,createJob,getJobs,jobDetails,applyForJob,searchJobs,verifyJob ,updateJob,getApplications,deleteAllJobApp,getJobsAdmin,applyDetails} from "../controllers/JobControllers.js";
 import { mentorAuth } from "../middlewares/mentorAuth.js";
 import { userAuth } from "../middlewares/userAuth.js";
 import { adminAuth } from "../middlewares/adminAuth.js";
@@ -20,12 +20,17 @@ router.post("/create",mentorAuth,upload.single('image') ,createJob);
 
 // router.get("/jobs",adminAuth ,getJobs);
 // router.get("/jobs",userAuth ,getJobs);
+router.get("/del", jobAuth, deleteAllJobApp);
 
 
 router.get("/jobs",jobAuth ,getJobs);
+
+router.get("/jobs-admin",jobAuth ,getJobsAdmin);
+
 router.get("/get-Applications",jobAuth ,getApplications);
 
 
+router.get("/get_job_apply/:id",userAuth ,applyDetails);
 
 
 router.get("/get_job_details/:id",mentorAuth ,jobDetails);

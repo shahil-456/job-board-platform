@@ -1,6 +1,6 @@
 import e from "express";
 import { adminLogin, adminLogout, adminProfile, adminSignup,profileUpdate,accountDeactivate,changePassword,getAllUsers ,userDetails,verifyUser,checkAdmin} from "../controllers/adminControllers.js";
-import { getJobs} from "../controllers/jobControllers.js";
+import { getJobs} from "../controllers/JobControllers.js";
 
 import { adminAuth } from "../middlewares/adminAuth.js";
 
