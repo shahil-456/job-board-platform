@@ -14,7 +14,7 @@ export const jobAuth = (req, res, next) => {
             return res.status(401).json({ message: "user not autherised", success: false });
         }
 
-        req.user = tokenVerified;
+        req.user = tokenVerified;``
 
         next();
     } catch (error) {

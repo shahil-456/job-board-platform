@@ -167,9 +167,9 @@ export const userDetails = async (req, res, next) => {
     try {
         const userID = req.params.id;
 
-        if (!mongoose.Types.ObjectId.isValid(userID)) {
-            return res.status(400).json({ message: "Invalid Job ID" });
-        }
+        // if (!mongoose.Types.ObjectId.isValid(userID)) {
+        //     return res.status(400).json({ message: "Invalid Job ID" });
+        // }
 
         try {
             const jobData = await Job.findById(userID);

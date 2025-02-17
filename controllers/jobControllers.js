@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import { User } from "../models/userModel.js";
 import cloudinary from '../config/cloudConfig.js';
 import { v2 as cloudinaryV2 } from 'cloudinary';
+import { Mentor } from "../models/mentorModel.js";
 
 
 export const createJob = async (req, res, next) => {
@@ -142,10 +143,10 @@ export const jobDetails = async (req, res, next) => {
 
         // console.log("Job Data without select:", jobData);
 
-        
+
         try {
             const jobData = await Job.findById(jobID);
-            console.log("Job Data11:", jobData);
+            console.log("Job Data:", jobData);
         } catch (error) {
             console.error("Error fetching job data:", error);
         }
@@ -168,13 +169,21 @@ export const jobDetails = async (req, res, next) => {
         // const jobData = await Job.findById(jobID).select("-details");
         const jobData = await Job.findById(jobID);
 
+
+        const mentorData = await Mentor.findById(jobData.mentorID);
+
+        if (mentorData) {
+            jobData._doc.mentorName = mentorData.name;
+        }
+
+
         if (!jobData) {
             return res.status(404).json({ message: "Job not found" });
         }
 
         return res.json({
             data: jobData,
-            message: "Job details fetched successfully",
+            message: "Job details fetched successfully" + mentorData,
         });
     } catch (error) {
         return res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
@@ -490,3 +499,36 @@ export const getApplications = async (req, res, next) => {
     }
 };
 
+
+
+export const getAppbyID = async (req, res, next) => {
+    try {
+        console.log("Fetching all Apps");
+
+        // Fetch all jobs from the Job collection
+
+        const appId = req.params.id;
+
+        const apps = await JobApply.findById(appId);
+
+
+        // const cvData = await CvData.findOne({ userID });
+
+        // const apps = await JobApply.find({ isVerified: true });
+
+        const userData = await User.findById(apps.userID);
+        const jobData = await Job.findById(apps.jobID);
+    
+        apps._doc.userData = userData; 
+        apps._doc.jobData = jobData;   
+        
+        
+
+        return res.json({
+            data: apps,
+            message: "Applications fetched successfully",
+        });
+    } catch (error) {
+        return res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
+    }
+};
