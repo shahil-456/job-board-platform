@@ -1,10 +1,17 @@
 import multer from 'multer';
 import path from 'path';
+import fs from 'fs';
+
+// Ensure the 'uploads' directory exists or create it
+const uploadDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
 
 // Define storage for uploaded files
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // Specify the folder to store files
+    cb(null, uploadDir); // Specify the folder to store files
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`;
@@ -21,7 +28,8 @@ const fileFilter = (req, file, cb) => {
   if (extName && mimeType) {
     cb(null, true);
   } else {
-    cb(new Error('Only .jpeg, .jpg, and .png files are allowed!'));
+    // You can throw an error, or you can pass a specific error message here
+    cb(new Error('Only .jpeg, .jpg, and .png files are allowed!'), false);
   }
 };
 
@@ -34,5 +42,5 @@ const upload = multer({
   },
 });
 
-
+// Export multer instance to use in routes
 export { upload };
