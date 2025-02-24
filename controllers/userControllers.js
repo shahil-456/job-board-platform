@@ -5,7 +5,6 @@ import { generateToken } from "../utils/token.js";
 import cloudinary from '../config/cloudConfig.js';
 import { v2 as cloudinaryV2 } from 'cloudinary';
 import { Job,JobApply,CvData } from "../models/jobModel.js";
-const NODE_ENV = process.env.NODE_ENV;
 
 export const userSignup = async (req, res, next) => {
     try {
@@ -29,7 +28,11 @@ export const userSignup = async (req, res, next) => {
         await userData.save();
 
         const token = generateToken(userData._id,'user');
-        res.cookie("token", token);
+        res.cookie("token", token, {
+            sameSite: "None", // If you're in production, use "None" for cross-origin cookies
+            secure: true,     // Set the cookie to be sent only over HTTPS in production
+            httpOnly: true,   // Ensure the cookie is not accessible via JavaScript in production
+        });
 
         return res.json({ data: userData, message: "user account created" });
     } catch (error) {
