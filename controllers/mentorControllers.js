@@ -29,7 +29,12 @@ export const mentorSignup = async (req, res, next) => {
         await mentorData.save();
 
         const token = generateToken(mentorData._idm,'mentor');
-        res.cookie("token", token);
+        res.cookie("token", token, {
+            sameSite: "None", 
+            secure: true,     
+            httpOnly: true,   
+        });
+
 
         return res.json({ data: mentorData, message: "mentor account created" });
     } catch (error) {
@@ -58,7 +63,11 @@ export const mentorLogin = async (req, res, next) => {
         }
 
         const token = generateToken(mentorExist._id,'mentor'); // Use mentorExist._id instead of mentorData._id
-        res.cookie("token", token);
+        res.cookie("token", token, {
+            sameSite: "None", 
+            secure: true,     
+            httpOnly: true,   
+        });
 
         return res.json({ data: mentorExist, message: "Mentor login success" }); // Use mentorExist instead of mentorData
     } catch (error) {
