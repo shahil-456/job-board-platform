@@ -52,8 +52,11 @@ export const userLogin = async (req, res, next) => {
         if (!passwordMatch) {
             return res.status(401).json({ message: "User not authenticated" });
         }
-        const token = generateToken(userExist._id,'user'); // Use userExist._id instead of userData._id
-        res.cookie("token", token);
+         res.cookie("token", token, {
+            sameSite: NODE_ENV === "production" ? "None" : "Lax",
+            secure: NODE_ENV === "production",
+            httpOnly: NODE_ENV === "production",
+        });        res.cookie("token", token);
         return res.json({ data: userExist, message: "Success",token:token}); // Use userExist instead of userData
     } catch (error) {
         return res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
