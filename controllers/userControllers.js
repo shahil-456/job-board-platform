@@ -58,11 +58,12 @@ export const userLogin = async (req, res, next) => {
 
          const token = generateToken(userExist._id,'user'); // Use userExist._id instead of userData._id
 
-        res.cookie("token", token, {
-            sameSite: NODE_ENV === "production" ? "None" : "Lax",
-            secure: NODE_ENV === "production",
-            httpOnly: NODE_ENV === "production",
-        });
+      res.cookie("token", token, {
+    sameSite: "None", // If you're in production, use "None" for cross-origin cookies
+    secure: true,     // Set the cookie to be sent only over HTTPS in production
+    httpOnly: true,   // Ensure the cookie is not accessible via JavaScript in production
+});
+
         return res.json({ data: userExist, message: "Success",token:token}); // Use userExist instead of userData
     } catch (error) {
         return res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
