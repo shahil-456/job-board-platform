@@ -5,7 +5,7 @@ import { generateToken } from "../utils/token.js";
 import cloudinary from '../config/cloudConfig.js';
 import { v2 as cloudinaryV2 } from 'cloudinary';
 import { Job,JobApply,CvData } from "../models/jobModel.js";
-
+const NODE_ENV = process.env.NODE_ENV;
 
 export const userSignup = async (req, res, next) => {
     try {
