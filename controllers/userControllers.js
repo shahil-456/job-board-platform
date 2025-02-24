@@ -167,7 +167,6 @@ export const checkUser = async (req, res, next) => {
 
 
 
-
 export const profileUpdate = async (req, res, next) => {
     try {
         console.log("Profile update endpoint hit");
@@ -185,7 +184,6 @@ export const profileUpdate = async (req, res, next) => {
             // return res.status(201).json({ data: result, message: 'Job Created' });
 
         }
-
 
         // if ( !mobile) {
         //     return res.status(400).json({ message: "Name and email are required" });
@@ -213,7 +211,6 @@ export const profileUpdate = async (req, res, next) => {
         return res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
     }
 };
-
 
 
 
