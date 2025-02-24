@@ -52,6 +52,9 @@ export const userLogin = async (req, res, next) => {
         if (!passwordMatch) {
             return res.status(401).json({ message: "User not authenticated" });
         }
+
+         const token = generateToken(userExist._id,'user'); // Use userExist._id instead of userData._id
+
         res.cookie("token", token, {
             sameSite: NODE_ENV === "production" ? "None" : "Lax",
             secure: NODE_ENV === "production",
