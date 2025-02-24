@@ -128,7 +128,11 @@ export const new_test = async (req, res, next) => {
 
 export const mentorLogout = async (req, res, next) => {
     try {
-        res.clearCookie("token");
+        res.clearCookie("token", {
+            sameSite: "None", // Same as when the cookie was set
+            secure: true,     // Same as when the cookie was set
+            httpOnly: true,   // Same as when the cookie was set
+        });
 
         return res.json({ message: "mentor logout success" });
     } catch (error) {
