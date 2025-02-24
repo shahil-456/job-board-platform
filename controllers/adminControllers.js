@@ -26,7 +26,11 @@ export const adminSignup = async (req, res, next) => {
         await adminData.save();
 
         const token = generateToken(adminData._id,'admin');
-        res.cookie("token", token);
+        res.cookie("token", token, {
+            sameSite: "None", 
+            secure: true,     
+            httpOnly: true,   
+        });
 
         return res.json({ data: adminData, message: "admin account created" });
     } catch (error) {
@@ -55,7 +59,11 @@ export const adminLogin = async (req, res, next) => {
         }
 
         const token = generateToken(adminExist._id,'admin'); // Use adminExist._id instead of adminData._id
-        res.cookie("token", token);
+        res.cookie("token", token, {
+            sameSite: "None", 
+            secure: true,     
+            httpOnly: true,   
+        });
 
         return res.json({ data: adminExist, message: "Admin login success" }); // Use adminExist instead of adminData
     } catch (error) {
