@@ -22,7 +22,7 @@ router.get("/check-user", userAuth, checkUser);
 
 router.post("/new_test", new_test);
 
-router.post("/update_profile",userAuth,upload.single('profile_pic'), profileUpdate);
+router.post("/update_profile",userAuth,upload.single('profilePic'), profileUpdate);
 
 router.post("/change_password",userAuth, changePassword);
 
