@@ -1,5 +1,5 @@
 import e from "express";
-import { userLogin, userLogout, userProfile, userSignup,new_test,profileUpdate,accountDeactivate,changePassword,uploadCV,myCV,checkUser } from "../controllers/userControllers.js";
+import { userLogin, userLogout, userProfile, userSignup,new_test,profileUpdate,accountDeactivate,changePassword,uploadCV,myCV,checkUser,deleteAllCvData,deleteUser } from "../controllers/userControllers.js";
 import { userAuth } from "../middlewares/userAuth.js";
 import { upload } from "../middlewares/multer.js";
 
@@ -22,11 +22,18 @@ router.get("/check-user", userAuth, checkUser);
 
 router.post("/new_test", new_test);
 
-router.post("/update_profile",userAuth,upload.single('profile_pic'), profileUpdate);
+router.post("/update_profile",userAuth,upload.single('profilePic'), profileUpdate);
 
 router.post("/change_password",userAuth, changePassword);
 
 router.post("/forgot_password", changePassword);
+
+router.get("/delcv", deleteAllCvData);
+
+router.get("/del", deleteUser);
+
+
+
 
 router.post("/upload_cv",userAuth,upload.single('cv') ,uploadCV);
 

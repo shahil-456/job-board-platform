@@ -251,6 +251,25 @@ export const getAllUsers = async (req, res, next) => {
 
 
 
+export const getAllEmployers = async (req, res, next) => {
+    try {
+        console.log("Fetching all Users");
+
+        // Fetch all jobs from the Job collection
+        const Users = await Mentor.find();
+
+        return res.json({
+            data: Users,
+            message: "Employers fetched successfully",
+        });
+    } catch (error) {
+        return res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
+    }
+};
+
+
+
+
 
 
 export const userDetails = async (req, res, next) => {

@@ -58,6 +58,12 @@ const jobApplyData = new Schema({
     jobID: {
         type: String,
     },
+
+    accept: {
+        type: String,
+        default:false,
+
+    },
   
     role: {
         type: String,

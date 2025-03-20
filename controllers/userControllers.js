@@ -172,7 +172,6 @@ export const profileUpdate = async (req, res, next) => {
 
         }
 
-
         // if ( !mobile) {
         //     return res.status(400).json({ message: "Name and email are required" });
         // }
@@ -299,29 +298,90 @@ export const forgotPassword = async (req, res, next) => {
 
 
 
-
 export const uploadCV = async (req, res, next) => {
     try {
-
         const { skill } = req.body;
+        let cv = req.file; // The uploaded file
 
-        let cv = req.file;//upload this file to cloudinary
         if (req.file) {
+            // Upload to Cloudinary
             const result = await cloudinary.uploader.upload(req.file.path, {
-                folder: 'uploads', 
+                folder: 'uploads',
             });
-            cv = result.secure_url; 
-            // return res.status(201).json({ data: result, message: 'CV Uploaded' });
-
+            cv = result.secure_url; // Use the secure URL from Cloudinary
         }
 
         const userID = req.user.id;
-        // Create a new job entry
-        const cvData = new CvData({ userID,skill,cv });
-        await cvData.save();
-        return res.status(201).json({ data: cvData, message: 'CV Added' });
+
+        // Check if CvData already exists for the user
+        let cvData = await CvData.findOne({ userID });
+
+        if (cvData) {
+            // If CvData exists, update it
+            cvData.skill = skill;
+            cvData.cv = cv;
+
+            await cvData.save();
+            return res.status(200).json({ data: cvData, message: 'CV Updated' });
+        } else {
+            // If CvData does not exist, create a new one
+            cvData = new CvData({ userID, skill, cv });
+            await cvData.save();
+            return res.status(201).json({ data: cvData, message: 'CV Added' });
+        }
     } catch (error) {
-        return res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
+        return res.status(error.statusCode || 500).json({
+            message: error.message || "Internal server error",
+        });
+    }
+};
+
+
+
+export const deleteAllCvData = async (req, res, next) => {
+    try {
+        // Delete all CvData entries
+        const result = await CvData.deleteMany({});
+        
+        // Check if any data was deleted
+        if (result.deletedCount === 0) {
+            return res.status(404).json({
+                message: 'No CV data found to delete',
+            });
+        }
+
+        return res.status(200).json({
+            message: 'All CV data deleted successfully',
+        });
+    } catch (error) {
+        return res.status(error.statusCode || 500).json({
+            message: error.message || "Internal server error",
+        });
+    }
+};
+
+
+
+
+export const deleteUser = async (req, res, next) => {
+    try {
+        // Delete all CvData entries
+        const result = await User.deleteMany({});
+        
+        // Check if any data was deleted
+        if (result.deletedCount === 0) {
+            return res.status(404).json({
+                message: 'No  data found to delete',
+            });
+        }
+
+        return res.status(200).json({
+            message: 'All  data deleted successfully',
+        });
+    } catch (error) {
+        return res.status(error.statusCode || 500).json({
+            message: error.message || "Internal server error",
+        });
     }
 };
 

@@ -404,6 +404,28 @@ export const applyForJob = async (req, res, next) => {
     }
 };
 
+
+
+
+    export const acceptJob = async (req, res, next) => {
+        try {
+            const appID = req.params.id;
+
+            const user = await JobApply.findById(appID);
+            if (!user) {
+                return res.status(404).json({ message: "Job application not found" });
+            }
+
+            user.accept = true;
+            await user.save(); 
+
+            return res.json({ data: user, message: `Accepted Job` });
+        } catch (error) {
+            return res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
+        }
+    };
+
+
 // saved format
 
 
@@ -437,6 +459,28 @@ export const deleteAllJobApp = async (req, res, next) => {
         return res.json({
             message: 'All job applications have been deleted successfully',
             deletedCount: result.deletedCount 
+        });
+    } catch (error) {
+        return res.status(error.statusCode || 500).json({ 
+            message: error.message || "Internal server error" 
+        });
+    }
+};
+
+export const deleteJob = async (req, res, next) => {
+    try {
+        const jobID = req.params.id;
+
+        const result = await Job.findByIdAndDelete(jobID);
+        
+        if (!result) {
+            return res.status(404).json({
+                message: 'Job not found',
+            });
+        }
+
+        return res.json({
+            message: 'Job deleted successfully',
         });
     } catch (error) {
         return res.status(error.statusCode || 500).json({ 
@@ -501,6 +545,39 @@ export const getApplications = async (req, res, next) => {
 
 
 
+
+export const getUserJobs = async (req, res, next) => {
+    try {
+        console.log("Fetching all Apps");
+
+        // Fetch all jobs from the Job collection
+
+        const userId = req.user.id; 
+
+        const apps = await JobApply.find({ userID: userId });
+        
+
+        for (let app of apps) {
+            const userData = await User.findById(app.userID);
+            const jobData = await Job.findById(app.jobID);
+        
+            app._doc.userData = userData; 
+            app._doc.jobData = jobData;   
+        }
+    
+
+        return res.json({
+            data: apps,
+            message: "Applications fetched successfully",
+        });
+    } catch (error) {
+        return res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
+    }
+};
+
+
+
+
 export const getAppbyID = async (req, res, next) => {
     try {
         console.log("Fetching all Apps");
@@ -530,5 +607,29 @@ export const getAppbyID = async (req, res, next) => {
         });
     } catch (error) {
         return res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
+    }
+};
+
+
+
+export const deleteApps = async (req, res, next) => {
+    try {
+        // Delete all CvData entries
+        const result = await JobApply.deleteMany({});
+        
+        // Check if any data was deleted
+        if (result.deletedCount === 0) {
+            return res.status(404).json({
+                message: 'No  data found to delete',
+            });
+        }
+
+        return res.status(200).json({
+            message: 'All  data deleted successfully',
+        });
+    } catch (error) {
+        return res.status(error.statusCode || 500).json({
+            message: error.message || "Internal server error",
+        });
     }
 };

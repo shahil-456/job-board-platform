@@ -1,5 +1,9 @@
 import e from "express";
-import {  jobProfile,new_test,profileUpdate,accountDeactivate,changePassword,createJob,getJobs,jobDetails,applyForJob,searchJobs,verifyJob ,updateJob,getApplications,deleteAllJobApp,getAppbyID,getJobsAdmin,applyDetails} from "../controllers/JobControllers.js";
+import {  jobProfile,new_test,profileUpdate,accountDeactivate,changePassword,createJob,getJobs,jobDetails,applyForJob,searchJobs,verifyJob ,updateJob,getApplications,deleteAllJobApp,deleteJob,getAppbyID,getJobsAdmin,applyDetails,acceptJob,getUserJobs,deleteApps,} from "../controllers/jobControllers.js";
+import { mentorLogin, mentorLogout, mentorProfile, mentorSignup ,userDetails,getAllEmployers} from "../controllers/mentorControllers.js";
+
+
+
 import { mentorAuth } from "../middlewares/mentorAuth.js";
 import { userAuth } from "../middlewares/userAuth.js";
 import { adminAuth } from "../middlewares/adminAuth.js";
@@ -28,10 +32,20 @@ router.get("/jobs",jobAuth ,getJobs);
 router.get("/jobs-admin",jobAuth ,getJobsAdmin);
 
 router.get("/get-Applications",jobAuth ,getApplications);
+
+router.get("/get-UserJobs",userAuth ,getUserJobs);
+
 router.get("/get-App/:id",jobAuth ,getAppbyID);
 
 
+router.get("/del-job/:id" ,deleteJob);
+
+
 router.get("/get_job_apply/:id",userAuth ,applyDetails);
+
+router.get("/get_employers/",jobAuth ,getAllEmployers);
+
+
 
 
 router.get("/get_job_details/:id",jobAuth ,jobDetails);
@@ -55,7 +69,9 @@ router.get("/profile", mentorAuth, jobProfile);
 
 router.post("/new_test", new_test);
 
+router.get("/accept_job/:id",jobAuth ,acceptJob);
 
+router.get("/del_s", jobAuth,deleteApps);
 
 
 
