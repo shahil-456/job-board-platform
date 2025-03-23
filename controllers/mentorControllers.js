@@ -166,6 +166,23 @@ export const profileUpdate = async (req, res, next) => {
 
 
 
+export const addToken = async (req, res, next) => {
+    try {
+
+        const mentorId = req.mentor.id; 
+
+        const mentor = await Mentor.findById(mentorId);
+
+        await Mentor.findByIdAndUpdate(mentorId, { $inc: { token: 10 } });
+
+        return res.json({
+            message: "Token added successfully",
+        });
+    } catch (error) {
+        return res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
+    }
+};
+
 
 
 export const changePassword = async (req, res, next) => {

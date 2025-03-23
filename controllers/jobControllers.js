@@ -28,9 +28,14 @@ export const createJob = async (req, res, next) => {
 
         const mentorID = req.mentor.id;
 
+
         // Create a new job entry
         const jobData = new Job({ mentorID, title, details, company, contact, skills, image });
-        await jobData.save();
+        // await jobData.save();
+
+        await Mentor.findByIdAndUpdate(mentorID, { $inc: { token: -1 } });
+
+
 
         return res.status(201).json({ data: jobData, message: 'Job Created' });
     } catch (error) {

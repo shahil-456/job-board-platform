@@ -4,12 +4,17 @@ import { mentorRouter } from "./mentorRoutes.js";
 import { jobRouter } from "./jobRoutes.js";
 import { adminRouter } from "./adminRoutes.js";
 
+import { paymentRouter } from "./paymentRoutes.js";
+
+
 const router = e.Router();
 
 router.use("/user", userRouter);
 router.use("/mentor", mentorRouter);
 router.use("/job", jobRouter);
 router.use("/admin", adminRouter);
+router.use("/payment", paymentRouter);
+
 
 
 
